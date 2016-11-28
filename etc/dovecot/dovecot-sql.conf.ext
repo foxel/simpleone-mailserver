@@ -1,0 +1,16 @@
+driver = mysql
+connect = host=$ENV_DB_HOSTNAME dbname=$ENV_DB_NAME user=$ENV_DB_USERNAME password=$ENV_DB_PASSWORD
+
+# Default password scheme.
+#
+# List of supported schemes is in
+# http://wiki2.dovecot.org/Authentication/PasswordSchemes
+#
+#default_pass_scheme = MD5
+
+password_query = SELECT email as user, password FROM mailserver_virtual_users WHERE email='%u';
+
+# Query to get a list of all usernames.
+iterate_query = SELECT DISTINCT email as user FROM mailserver_virtual_users
+
+userdb_warning_disable=yes

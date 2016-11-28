@@ -1,0 +1,43 @@
+# See /usr/share/postfix/main.cf.dist for a commented, more complete version
+compatibility_level = 2
+smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu)
+biff = no
+
+# appending .domain is the MUA's job.
+append_dot_mydomain = no
+
+readme_directory = no
+
+# TLS parameters
+smtpd_tls_cert_file=/etc/ssl/mailserver/cert.pem
+smtpd_tls_key_file=/etc/ssl/mailserver/key.key
+smtpd_use_tls=yes
+smtpd_tls_auth_only = yes
+
+# See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
+# information on enabling SSL in the smtp client.
+
+myhostname = $ENV_MAIL_HOSTNAME
+mydestination = localhost
+relayhost =
+mynetworks = 172.0.0.0/8 127.0.0.0/8
+inet_interfaces = all
+inet_protocols = all
+recipient_delimiter = +
+
+mailbox_size_limit = 0
+
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_auth_enable = yes
+smtpd_recipient_restrictions = permit_sasl_authenticated permit_mynetworks reject_unauth_destination
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+
+virtual_transport = lmtp:unix:private/dovecot-lmtp
+
+virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual-mailbox-domains.cf
+virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual-mailbox-maps.cf
+virtual_alias_maps = mysql:/etc/postfix/mysql-virtual-alias-maps.cf

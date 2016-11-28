@@ -1,0 +1,6 @@
+user = $ENV_DB_USERNAME
+password = $ENV_DB_PASSWORD
+hosts = $ENV_DB_HOSTNAME
+dbname = $ENV_DB_NAME
+
+query = SELECT 1 FROM mailserver_virtual_users WHERE email='%s'

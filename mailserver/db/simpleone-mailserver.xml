@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ Copyright (C) 2016 Andrey F. Kupreychik (Foxel)
+
+ This file is part of QuickFox SimpleOne MailServer.
+
+ SimpleOne is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ SimpleOne is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with SimpleOne. If not, see <http://www.gnu.org/licenses/>.
+-->
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd"
+                   logicalFilePath="simpleone/init">
+    <changeSet author="Foxel" id="init-table-domains">
+        <createTable tableName="${db.prefix}mailserver_domains">
+            <column name="id" autoIncrement="true" type="INT UNSIGNED">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="domain" type="CHAR(128) CHARACTER SET ascii ">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
+        </modifySql>
+    </changeSet>
+    <changeSet author="Foxel" id="init-table-aliases">
+        <createTable tableName="${db.prefix}mailserver_aliases">
+            <column name="id" autoIncrement="true" type="INT UNSIGNED">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="source" type="CHAR(16) CHARACTER SET ascii ">
+                <constraints nullable="false"/>
+            </column>
+            <column name="destination_email" type="CHAR(255) CHARACTER SET ascii ">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+            <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
+        </modifySql>
+    </changeSet>
+    <changeSet author="Foxel" id="init-view-domains">
+        <createView viewName="mailserver_virtual_domains" replaceIfExists="true">
+            SELECT d.id, d.domain
+            FROM ${db.prefix}mailserver_domains d
+        </createView>
+    </changeSet>
+    <changeSet author="Foxel" id="init-view-users">
+        <createView viewName="mailserver_virtual_users" replaceIfExists="true">
+            SELECT u.id, ua.login AS user, CONCAT(ua.login, '@', d.domain) as email, ua.pass_crypt AS password
+            FROM ${db.prefix}users_auth ua
+            LEFT JOIN ${db.prefix}users u ON u.id = ua.uid
+            CROSS JOIN ${db.prefix}mailserver_domains d
+            WHERE u.level > 0 AND u.frozen = 0
+        </createView>
+    </changeSet>
+    <changeSet author="Foxel" id="init-view-aliases">
+        <createView viewName="mailserver_virtual_aliases" replaceIfExists="true">
+            SELECT CONCAT(a.source, '@', d.domain) as source, a.destination_email as destination
+            FROM ${db.prefix}mailserver_aliases a
+            CROSS JOIN ${db.prefix}mailserver_domains d
+        </createView>
+    </changeSet>
+</databaseChangeLog>
