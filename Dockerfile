@@ -9,7 +9,7 @@ RUN \
     apt-get -y --no-install-recommends install \
         wget supervisor rsyslog cron \
         postfix postfix-mysql \
-        dovecot-core dovecot-imapd dovecot-lmtpd dovecot-mysql \
+        dovecot-core dovecot-imapd dovecot-lmtpd dovecot-mysql dovecot-sieve \
         libmail-dkim-perl libnet-ident-perl pyzor razor spamassassin spamc \
         default-jre-headless && \
     update-locale LANG=C.UTF-8 && \
