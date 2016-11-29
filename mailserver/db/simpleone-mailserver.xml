@@ -32,6 +32,9 @@
             <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
         </modifySql>
     </changeSet>
+    <changeSet author="Foxel" id="table-domains-unique">
+        <addUniqueConstraint constraintName="${db.prefix}mailserver_domains_uniq" tableName="${db.prefix}mailserver_domains" columnNames="domain" />
+    </changeSet>
     <changeSet author="Foxel" id="init-table-aliases">
         <createTable tableName="${db.prefix}mailserver_aliases">
             <column name="id" autoIncrement="true" type="INT UNSIGNED">
@@ -69,5 +72,13 @@
             FROM ${db.prefix}mailserver_aliases a
             CROSS JOIN ${db.prefix}mailserver_domains d
         </createView>
+    </changeSet>
+    <changeSet author="Foxel" id="add-mail-hostname-domain" runOnChange="true">
+        <preConditions>
+            <sqlCheck expectedResult="0">select count(*) from ${db.prefix}mailserver_domains where domain ='${mail.hostname}'</sqlCheck>
+        </preConditions>
+        <insert tableName="${db.prefix}mailserver_domains">
+            <column name="domain" value="${mail.hostname}" />
+        </insert>
     </changeSet>
 </databaseChangeLog>

@@ -9,4 +9,4 @@ exec liquibase \
     --url="jdbc:mysql://${DB_HOSTNAME}/${DB_NAME}" \
     --driver=com.mysql.jdbc.Driver \
     --classpath='/opt/liquibase/mysql-connector.jar' \
-    update -Ddb.prefix="$DB_PREFIX"
+    update -Ddb.prefix="$DB_PREFIX" -Dmail.hostname="$MAIL_HOSTNAME"
