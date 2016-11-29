@@ -12,8 +12,14 @@ set -e
     /etc/postfix/mysql-virtual-mailbox-domains.cf \
     /etc/postfix/mysql-virtual-mailbox-maps.cf
 
-bash /opt/mailserver/db/update.sh
-
 chown -R vmail:vmail /var/mail
+
+if [ -n "$1" ]; then
+    exec "$@"
+    #just in case
+    exit 0
+fi
+
+bash /opt/mailserver/db/update.sh
 
 exec supervisord -nc /etc/supervisor/supervisord.conf
