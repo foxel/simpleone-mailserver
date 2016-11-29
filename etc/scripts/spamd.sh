@@ -5,5 +5,5 @@ exec spamd --username debian-spamd \
       --syslog stderr \
       --pidfile /var/run/spamd.pid \
       --helper-home-dir /var/lib/spamassassin \
-      --ip-address \
-      --allowed-ips 0.0.0.0/0
+      --listen 127.0.0.1 \
+      --allowed-ips 127.0.0.1/16
