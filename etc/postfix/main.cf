@@ -9,8 +9,8 @@ append_dot_mydomain = no
 readme_directory = no
 
 # TLS parameters
-smtpd_tls_cert_file=/etc/ssl/mailserver/cert.pem
-smtpd_tls_key_file=/etc/ssl/mailserver/key.key
+smtpd_tls_cert_file = $ENV_MAIL_SSL_CERT_FILE
+smtpd_tls_key_file = $ENV_MAIL_SSL_KEY_FILE
 smtpd_use_tls=yes
 smtpd_tls_auth_only = yes
 

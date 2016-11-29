@@ -39,7 +39,9 @@ ENV \
     DB_HOSTNAME=mysql \
     DB_PREFIX=qfso_ \
     MAIL_HOSTNAME=example.com \
-    MAIL_PROCESS_LIMIT=10
+    MAIL_PROCESS_LIMIT=10 \
+    MAIL_SSL_CERT_FILE="/etc/ssl/certs/ssl-cert-snakeoil.pem" \
+    MAIL_SSL_KEY_FILE="/etc/ssl/private/ssl-cert-snakeoil.key"
 
 COPY mailserver/ /opt/mailserver/
 COPY etc/ /etc/
@@ -47,11 +49,7 @@ COPY etc/ /etc/
 RUN \
     chmod +x /etc/scripts/*.sh && \
     groupadd -g 5000 vmail  && \
-    useradd -g vmail -u 5000 vmail -d /var/mail && \
-    # SSL
-    mkdir -p /etc/ssl/mailserver && \
-    cp /etc/ssl/certs/ssl-cert-snakeoil.pem /etc/ssl/mailserver/cert.pem && \
-    cp /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/mailserver/key.key
+    useradd -g vmail -u 5000 vmail -d /var/mail
 
 # SMTP submission(STARTTLS) IMAPS POP3S
 EXPOSE 25 587 993 995

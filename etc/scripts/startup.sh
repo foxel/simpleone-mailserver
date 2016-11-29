@@ -6,6 +6,7 @@ set -e
     /etc/dovecot/dovecot.conf \
     /etc/dovecot/dovecot-sql.conf.ext \
     /etc/dovecot/conf.d/10-master.conf \
+    /etc/dovecot/conf.d/10-ssl.conf \
     /etc/postfix/main.cf \
     /etc/postfix/mysql-virtual-alias-maps.cf \
     /etc/postfix/mysql-virtual-mailbox-domains.cf \
