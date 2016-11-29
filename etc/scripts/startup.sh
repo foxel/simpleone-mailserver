@@ -5,6 +5,7 @@ set -e
 /etc/scripts/replace-env.sh \
     /etc/dovecot/dovecot.conf \
     /etc/dovecot/dovecot-sql.conf.ext \
+    /etc/dovecot/conf.d/10-master.conf \
     /etc/postfix/main.cf \
     /etc/postfix/mysql-virtual-alias-maps.cf \
     /etc/postfix/mysql-virtual-mailbox-domains.cf \

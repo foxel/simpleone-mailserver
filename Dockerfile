@@ -31,13 +31,15 @@ RUN \
     ln -s /opt/liquibase/liquibase /bin/liquibase
 
 # Config defaults
+# can be overwrited on start
 ENV \
     DB_USERNAME=simpleone \
     DB_PASSWORD=simpleone \
     DB_NAME=simpleone \
     DB_HOSTNAME=mysql \
     DB_PREFIX=qfso_ \
-    MAIL_HOSTNAME=example.com
+    MAIL_HOSTNAME=example.com \
+    MAIL_PROCESS_LIMIT=10
 
 COPY mailserver/ /opt/mailserver/
 COPY etc/ /etc/
@@ -51,7 +53,8 @@ RUN \
     cp /etc/ssl/certs/ssl-cert-snakeoil.pem /etc/ssl/mailserver/cert.pem && \
     cp /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/mailserver/key.key
 
-EXPOSE 25 465 993 587
+# SMTP submission(STARTTLS) IMAPS POP3S
+EXPOSE 25 587 993 995
 
 VOLUME ["/var/mail", "/var/log"]
 
