@@ -10,6 +10,7 @@ RUN \
         wget supervisor rsyslog cron \
         postfix postfix-mysql \
         dovecot-core dovecot-imapd dovecot-lmtpd dovecot-mysql \
+        libmail-dkim-perl libnet-ident-perl pyzor razor spamassassin spamc \
         default-jre-headless && \
     update-locale LANG=C.UTF-8 && \
     rm -rf /etc/logrotate.d/* && \
@@ -49,7 +50,14 @@ COPY etc/ /etc/
 RUN \
     chmod +x /etc/scripts/*.sh && \
     groupadd -g 5000 vmail  && \
-    useradd -g vmail -u 5000 vmail -d /var/mail
+    useradd -g vmail -u 5000 vmail -d /var/mail && \
+    # spamd
+    mkdir -p /etc/spamassassin/sa-update-keys /var/lib/spamassassin/.pyzor && \
+    chmod 700 /etc/spamassassin/sa-update-keys /var/lib/spamassassin/.pyzor && \
+    echo "public.pyzor.org:24441" > /var/lib/spamassassin/.pyzor/servers && \
+    chmod 600 /var/lib/spamassassin/.pyzor/servers && \
+    chown -R debian-spamd:debian-spamd /etc/spamassassin/sa-update-keys /var/lib/spamassassin/.pyzor && \
+    sed -i 's/^logfile = .*$/logfile = \/dev\/stderr/g' /etc/razor/razor-agent.conf
 
 # SMTP submission(STARTTLS) IMAPS POP3S
 EXPOSE 25 587 993 995
