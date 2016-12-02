@@ -52,16 +52,15 @@ RUN \
     groupadd -g 5000 vmail  && \
     useradd -g vmail -u 5000 vmail -d /var/mail && \
     # spamd
-    mkdir -p /etc/spamassassin/sa-update-keys /var/lib/spamassassin/.pyzor && \
-    chmod 700 /etc/spamassassin/sa-update-keys /var/lib/spamassassin/.pyzor && \
-    echo "public.pyzor.org:24441" > /var/lib/spamassassin/.pyzor/servers && \
-    chmod 600 /var/lib/spamassassin/.pyzor/servers && \
-    chown -R debian-spamd:debian-spamd /etc/spamassassin/sa-update-keys /var/lib/spamassassin/.pyzor && \
+    mkdir -p /etc/spamassassin/sa-update-keys && \
+    chmod 700 /etc/spamassassin/sa-update-keys && \
+    echo "pyzor_options --homedir /var/lib/spamassassin/.pyzor" >> /etc/spamassassin/local.cf && \
+    chown -R debian-spamd:debian-spamd /etc/spamassassin/sa-update-keys && \
     sed -i 's/^logfile = .*$/logfile = \/dev\/stderr/g' /etc/razor/razor-agent.conf
 
 # SMTP submission(STARTTLS) IMAPS POP3S
 EXPOSE 25 587 993 995
 
-VOLUME ["/var/mail", "/var/log"]
+VOLUME ["/var/mail", "/var/log", "/var/lib/spamassassin"]
 
 ENTRYPOINT ["/etc/scripts/startup.sh"]

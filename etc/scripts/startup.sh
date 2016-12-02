@@ -14,6 +14,8 @@ set -e
 
 chown -R vmail:vmail /var/mail
 
+pyzor --homedir /var/lib/spamassassin/.pyzor discover
+
 if [ -n "$1" ]; then
     exec "$@"
     #just in case
